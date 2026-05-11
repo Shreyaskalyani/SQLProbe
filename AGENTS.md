@@ -18,8 +18,8 @@ python -m sqlprobe -u "http://example.com" -d 3 -c 20
 # Scan with proxy (for Burp Suite / OWASP ZAP)
 python -m sqlprobe -u "http://example.com" -p "http://localhost:8080"
 
-# Generate HTML report
-python -m sqlprobe -u "http://example.com" -o results --format html
+# Generate json report
+python -m sqlprobe -u "http://example.com" -o results --format json
 
 # Load previous session
 python -m sqlprobe --load-session session.json
@@ -74,7 +74,7 @@ python -m unittest test_quick_scan -v
 - `crawler/` - Smart web crawling for endpoint discovery
 - `analyzer/` - Result correlation and false positive reduction
 - `waf/` - WAF detection and adaptive testing
-- `reporting/` - JSON/HTML report generation
+- `reporting/` - JSON/json report generation
 - `cli/` - Command-line interface
 - `plugins/` - Extensible plugin system
 - `utils/` - Safety controls and logging
