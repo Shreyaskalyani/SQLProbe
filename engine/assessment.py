@@ -396,7 +396,7 @@ class AssessmentEngine:
                         sev_color = {"high": C_HIGH, "medium": C_MED, "low": C_LOW}.get(risk, "")
                         severity_marker = {"high": "HIGH", "medium": "MED", "low": "LOW"}.get(risk, "   ")
                         progress = f"[{test_count}/{total_tests}]"
-                        print(f"    {progress} [{sev_color}{severity_marker:4}{C_RESET}] [{type_name}] {param.name}: {payload_value[:35]}{'...' if len(payload_value) > 35 else ''}")
+                        print(f"    {progress} [{sev_color}{severity_marker:4}{C_RESET}] [{type_name}] {param.name}: {payload_value[:60]}{'...' if len(payload_value) > 60 else ''}")
                     
                     detection_result = await self._detection_engine.test_parameter(
                         http_engine=self._http_engine,
