@@ -38,7 +38,7 @@ class AnalyzedFinding:
 class ResultAnalyzer:
     """Analyzes and correlates detection results."""
     
-    def __init__(self, min_confidence_threshold: float = 0.4):
+    def __init__(self, min_confidence_threshold: float = 0.3):
         self.min_confidence_threshold = min_confidence_threshold
         self._correlation_cache: Dict[str, List[DetectionResult]] = {}
     
@@ -46,28 +46,22 @@ class ResultAnalyzer:
         self,
         results: List[DetectionResult]
     ) -> List[DetectionResult]:
-        """Correlate results - improved for modern websites."""
+        """Correlate results - show all unique vulnerabilities per parameter."""
         
-        grouped = self._group_by_endpoint_parameter(results)
+        unique_results = {}
         
-        correlated = []
+        for result in results:
+            if not result.is_vulnerable:
+                continue
+            
+            key = f"{result.endpoint}:{result.parameter}"
+            
+            if key not in unique_results:
+                unique_results[key] = result
+            elif result.confidence > unique_results[key].confidence:
+                unique_results[key] = result
         
-        for key, group in grouped.items():
-            if len(group) >= 1:
-                high_confidence = max(r.confidence for r in group)
-                
-                if high_confidence >= 0.6:
-                    best_result = max(group, key=lambda r: r.confidence)
-                    best_result.evidence['correlated_count'] = len(group)
-                    best_result.evidence['related_payloads'] = [r.payload for r in group[:5]]
-                    correlated.append(best_result)
-                    
-            elif len(group) == 1:
-                result = group[0]
-                if result.confidence >= 0.5:
-                    correlated.append(result)
-        
-        return correlated
+        return list(unique_results.values())
     
     def _group_by_endpoint_parameter(
         self,

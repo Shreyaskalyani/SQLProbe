@@ -136,10 +136,10 @@ SQL_ERROR_PATTERNS = {
 
 DIFFERENCE_THRESHOLDS = {
     'status_code': 0,
-    'content_length_percent': 3.0,
-    'content_similarity': 0.85,
-    'time_delay_ms': 2500,
-    'min_payload_tests': 2,
+    'content_length_percent': 0.5,
+    'content_similarity': 0.95,
+    'time_delay_ms': 1000,
+    'min_payload_tests': 1,
 }
 
 
@@ -437,6 +437,22 @@ class DetectionEngine:
                 'high_confidence': False,
                 'reason': 'single_indicator_weak',
                 'similarity': similarity,
+            }
+        
+        if content_changed or content_differed:
+            return True, {
+                'high_confidence': False,
+                'reason': 'content_changed',
+                'similarity': similarity,
+                'length_diff': length_diff,
+            }
+        
+        if similarity < 0.90 and length_diff > 10:
+            return True, {
+                'high_confidence': False,
+                'reason': 'minor_change',
+                'similarity': similarity,
+                'length_diff': length_diff,
             }
         
         return False, {}
