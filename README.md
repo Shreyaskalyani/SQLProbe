@@ -56,7 +56,7 @@ python -m sqlprobe -u "http://example.com" -v --depth 3 --concurrency 20
 # With proxy
 python -m sqlprobe -u "http://example.com" -p -v "http://localhost:8080"
 
-# Generate HTML report
+# Generate JSON report
 python -m sqlprobe -u "http://example.com" -v -o results --format json
 ```
 
@@ -98,7 +98,7 @@ asyncio.run(main())
 | `-t, --timeout` | Request timeout (seconds) | 30 |
 | `-p, --proxy` | HTTP/HTTPS proxy | None |
 | `-o, --output` | Output file path | None |
-| `-f, --format` | Output format (json/html/both) | json |
+| `-f, --format` | Output format (json/both) | json |
 | `-v, --verbose` | Increase verbosity | 0 |
 | `--save-session` | Save scan session | None |
 | `--load-session` | Load scan session | None |
