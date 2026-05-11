@@ -25,10 +25,10 @@ VERSION = "1.0.0"
 def display_banner():
     banner = """
 +=================================================================+
-|     SQL Injection Assessment Framework v1.0.0                  +
+|     SQL Injection Assessment Framework v1.0.0                   |
 |                                                                 |
-|  !!  AUTHORIZED SECURITY TESTING ONLY                    !!   |
-|  !!  Use only on systems you own or have permission       !!   |
+|  !!  AUTHORIZED SECURITY TESTING ONLY                     !!    |
+|  !!  Use only on systems you own or have permission       !!    |
 +=================================================================+
 """
     print(banner)
@@ -39,11 +39,11 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s -u "http://example.com/page.php?id=1"
-  %(prog)s -u "https://demo.testfire.net/login.jsp" -v
-  %(prog)s -u "http://example.com" -o results.json --format html
-  %(prog)s -u "http://example.com" -p "http://localhost:8080"
-  %(prog)s -u "http://example.com" --payload add.txt
+  python %(prog)s -u "http://example.com/page.php?id=1"
+  python %(prog)s -u "https://demo.testfire.net/login.jsp" -v
+  python %(prog)s -u "http://example.com" -o results.json --format html
+  python %(prog)s -u "http://example.com" -p "http://localhost:8080"
+  python %(prog)s -u "http://example.com" --payload add.txt
         """
     )
     parser.add_argument("-u", "--target", required=True, help="Target URL to test")

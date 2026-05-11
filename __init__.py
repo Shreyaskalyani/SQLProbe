@@ -109,14 +109,18 @@ def main() -> int:
         results = asyncio.run(engine.run())
         
         if results and args.output:
-            from .reporting import ReportGenerator
-            report_gen = ReportGenerator(
-                results=results,
-                output_format=args.format,
-                output_file=args.output,
-            )
-            report_gen.generate()
-            print(f"\n[+] Scan complete. Results saved to: {args.output}")
+            try:
+                from .reporting import ReportGenerator
+                report_gen = ReportGenerator(
+                    results=results,
+                    output_format=args.format,
+                    output_file=args.output,
+                )
+                report_gen.generate()
+                print(f"\n[+] Scan complete. Results saved to: {args.output}")
+            except Exception as e:
+                print(f"\n[!] Report generation error: {e}")
+                print(f"[!] Results found but HTML output failed. Try with --format json")
             return 0
         elif results:
             summary = engine.get_summary()

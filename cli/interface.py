@@ -27,11 +27,11 @@ Features:
   - Header/Cookie/JSON Injection Testing
   
 Examples:
-  %(prog)s -u "http://example.com/page.php?id=1"
-  %(prog)s -u "http://example.com" --depth 3 --concurrency 20
-  %(prog)s -u "http://example.com" --proxy "http://localhost:8080"
-  %(prog)s -u "http://example.com" -o results.json --format html
-  %(prog)s --load-session session.json
+  python %(prog)s -u "http://example.com/page.php?id=1"
+  python %(prog)s -u "http://example.com" --depth 3 --concurrency 20
+  python %(prog)s -u "http://example.com" --proxy "http://localhost:8080"
+  python %(prog)s -u "http://example.com" -o results.json --format html
+  python %(prog)s --load-session session.json
   
 Legal Notice:
   This tool is provided for authorized security testing only.
