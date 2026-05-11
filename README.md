@@ -1,4 +1,4 @@
-# SQLProbe - SQL Injection Assessment Framework v2.0 (2026)
+# SQLProbe - SQL Injection Assessment Framework v1.0 (2026)
 
 A production-grade, modular framework for authorized security testing of SQL injection vulnerabilities with modern 2026 features.
 
@@ -10,7 +10,7 @@ A production-grade, modular framework for authorized security testing of SQL inj
 - By using this tool, you agree to use it only in compliance with all applicable laws and with proper authorization.
 - The authors assume no liability for any misuse or damage caused by this tool.
 
-## What's New in v2.0 (2026)
+## What's New in v1.0 (2026)
 
 - **Auto-Parameters Discovery** - Automatically finds parameters from forms, links, JavaScript, and common parameter names
 - **WAF/Cloud Detection** - Detects Cloudflare, Akamai, AWS WAF, Imperva, FortiWeb, ModSecurity, Sucuri
@@ -51,13 +51,13 @@ pip install -e .
 python -m sqlprobe -u "http://example.com/page.php?id=1"
 
 # With depth and concurrency
-python -m sqlprobe -u "http://example.com" --depth 3 --concurrency 20
+python -m sqlprobe -u "http://example.com" -v --depth 3 --concurrency 20
 
 # With proxy
-python -m sqlprobe -u "http://example.com" -p "http://localhost:8080"
+python -m sqlprobe -u "http://example.com" -p -v "http://localhost:8080"
 
 # Generate HTML report
-python -m sqlprobe -u "http://example.com" -o results --format html
+python -m sqlprobe -u "http://example.com" -v -o results --format json
 ```
 
 ### Advanced Scanner (Standalone)
@@ -145,7 +145,7 @@ sqlprobe/
 ## Testing
 
 ```bash
-python -m sqlprobe -u "https://demo.testfire.net/search.jsp?query=test" --depth 1
+python -m sqlprobe -u "https://demo.testfire.net/search.jsp?query=test" -v --depth 1
 ```
 
 ## License
