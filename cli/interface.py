@@ -138,8 +138,8 @@ Legal Notice:
     parser.add_argument(
         '--max-payloads',
         type=int,
-        default=100,
-        help='Maximum payloads to test (default: 100)'
+        default=150,
+        help='Maximum payloads to test (default: 150)'
     )
     
     parser.add_argument(

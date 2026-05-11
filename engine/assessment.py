@@ -39,7 +39,7 @@ class AssessmentConfig:
     output: Optional[str] = None
     save_session: Optional[str] = None
     load_session: Optional[str] = None
-    max_payloads: int = 100
+    max_payloads: int = 150
     delay_between_tests: float = 0.5
     follow_redirects: bool = True
     verify_ssl: bool = True
@@ -396,7 +396,7 @@ class AssessmentEngine:
                         sev_color = {"high": C_HIGH, "medium": C_MED, "low": C_LOW}.get(risk, "")
                         severity_marker = {"high": "HIGH", "medium": "MED", "low": "LOW"}.get(risk, "   ")
                         progress = f"[{test_count}/{total_tests}]"
-                        print(f"    {progress} [{sev_color}{severity_marker:3}{C_RESET}] [{type_name:8}] {param.name}: {payload_value[:40]}{'...' if len(payload_value) > 40 else ''}")
+                        print(f"    {progress} [{sev_color}{severity_marker:4}{C_RESET}] [{type_name}] {param.name}: {payload_value[:35]}{'...' if len(payload_value) > 35 else ''}")
                     
                     detection_result = await self._detection_engine.test_parameter(
                         http_engine=self._http_engine,

