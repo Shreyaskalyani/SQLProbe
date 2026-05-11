@@ -305,7 +305,10 @@ class DetectionEngine:
             evidence['baseline_elapsed'] = baseline.elapsed_ms
         
         error_type, error_evidence = self._detect_sql_errors(response.text)
-        if error_type:
+        if error_type or (response.status_code >= 500):
+            if response.status_code >= 500:
+                error_evidence = error_evidence or {}
+                error_evidence['status_code'] = response.status_code
             evidence['sql_error'] = error_evidence
             return True, 0.95, InjectionType.ERROR_BASED, evidence
         

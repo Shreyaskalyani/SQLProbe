@@ -46,7 +46,7 @@ class ResultAnalyzer:
         self,
         results: List[DetectionResult]
     ) -> List[DetectionResult]:
-        """Correlate results - show all unique vulnerabilities per parameter."""
+        """Correlate results - show all unique vulnerabilities per parameter and type."""
         
         unique_results = {}
         
@@ -54,7 +54,7 @@ class ResultAnalyzer:
             if not result.is_vulnerable:
                 continue
             
-            key = f"{result.endpoint}:{result.parameter}"
+            key = f"{result.endpoint}:{result.parameter}:{result.injection_type.value}"
             
             if key not in unique_results:
                 unique_results[key] = result

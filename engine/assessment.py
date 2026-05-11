@@ -284,6 +284,12 @@ class AssessmentEngine:
                                         ))
                         
                         if params:
+                            param_names = {p.name for p in params}
+                            common_params = ['item', 'RetURL', 'page', 'id', 'search', 'query', 'q', 'keyword']
+                            for cp in common_params:
+                                if cp not in param_names:
+                                    params.append(FormParameter(name=cp, value='', param_type='common'))
+                            
                             results.append(CrawlResult(
                                 url=url,
                                 method='GET',
@@ -390,7 +396,7 @@ class AssessmentEngine:
                         sev_color = {"high": C_HIGH, "medium": C_MED, "low": C_LOW}.get(risk, "")
                         severity_marker = {"high": "HIGH", "medium": "MED", "low": "LOW"}.get(risk, "   ")
                         progress = f"[{test_count}/{total_tests}]"
-                        print(f"    {progress} [{sev_color}{severity_marker:3}{C_RESET}] [{type_name:12}] {param.name}: {payload_value[:40]}{'...' if len(payload_value) > 40 else ''}")
+                        print(f"    {progress} [{sev_color}{severity_marker:3}{C_RESET}] [{type_name:8}] {param.name}: {payload_value[:40]}{'...' if len(payload_value) > 40 else ''}")
                     
                     detection_result = await self._detection_engine.test_parameter(
                         http_engine=self._http_engine,

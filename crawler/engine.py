@@ -40,6 +40,13 @@ class Endpoint:
 class SmartCrawler:
     """Smart crawler for endpoint and parameter discovery."""
     
+    COMMON_PARAMS = [
+        'search', 'query', 'q', 'keyword', 's', 'id', 'user', 'username', 'email',
+        'page', 'limit', 'offset', 'sort', 'order', 'category', 'tag', 'item',
+        'login', 'admin', 'password', 'token', 'redirect', 'url', 'next', 'retURL',
+        'file', 'filename', 'path', 'callback', 'return', 'view', 'action', 'do',
+    ]
+    
     def __init__(self, http_engine, max_depth: int = 2, verbosity: int = 0):
         self._http_engine = http_engine
         self.max_depth = max_depth
@@ -75,6 +82,10 @@ class SmartCrawler:
                             value=inp.get('value', ''),
                             param_type=inp.get('type', 'text')
                         ))
+                
+                if not params:
+                    for p in self.COMMON_PARAMS[:15]:
+                        params.append(FormParameter(name=p, value='', param_type='common'))
                 
                 results.append(CrawlResult(
                     url=url,
