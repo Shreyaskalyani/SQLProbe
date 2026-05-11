@@ -147,6 +147,9 @@ sqlprobe/
 ```bash
 python3 -m sqlprobe -u "https://demo.testfire.net/search.jsp?query=test" -v --depth 1
 ```
+## Demo Screenshots
+<img width="1278" height="941" alt="Screenshot 2026-05-11 145712" src="https://github.com/user-attachments/assets/3effb0fd-7812-4235-b2df-8179119f1b07" />
+
 
 ## License
 
