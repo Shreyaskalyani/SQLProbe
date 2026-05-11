@@ -15,7 +15,7 @@ A production-grade, modular framework for authorized security testing of SQL inj
 - **Auto-Parameters Discovery** - Automatically finds parameters from forms, links, JavaScript, and common parameter names
 - **WAF/Cloud Detection** - Detects Cloudflare, Akamai, AWS WAF, Imperva, FortiWeb, ModSecurity, Sucuri
 - **CDN Identification** - Identifies CloudFront, Fastly, CDNJS, jsDelivr
-- **Tech Stack Fingerprinting** - Detects React, Vue, Angular, Node.js, Python, PHP, Java, Apache, Nginx
+- **Tech Stack Fingerprinting** - Detects React, Vue, Angular, Node.js, python3, PHP, Java, Apache, Nginx
 - **Header Injection Testing** - Tests X-Forwarded-For, User-Agent, custom headers
 - **Cookie Injection Testing** - Tests cookie values for SQL injection
 - **JSON API Testing** - Tests JSON body parameters
@@ -38,8 +38,8 @@ A production-grade, modular framework for authorized security testing of SQL inj
 ## Installation
 
 ```bash
-pip install -r requirements.txt
-pip install -e .
+pip3 install -r requirements.txt
+python3 -m pip install --user . --break-system-packages
 ```
 
 ## Quick Start
@@ -48,27 +48,27 @@ pip install -e .
 
 ```bash
 # Basic scan
-python -m sqlprobe -u "http://example.com/page.php?id=1"
+python3 -m sqlprobe -u "http://example.com/page.php?id=1"
 
 # With depth and concurrency
-python -m sqlprobe -u "http://example.com" -v --depth 3 --concurrency 20
+python3 -m sqlprobe -u "http://example.com" -v --depth 3 --concurrency 20
 
 # With proxy
-python -m sqlprobe -u "http://example.com" -p -v "http://localhost:8080"
+python3 -m sqlprobe -u "http://example.com" -p -v "http://localhost:8080"
 
 # Generate JSON report
-python -m sqlprobe -u "http://example.com" -v -o results --format json
+python3 -m sqlprobe -u "http://example.com" -v -o results --format json
 ```
 
 ### Advanced Scanner (Standalone)
 
 ```bash
-python advanced_scan.py "https://target.com/page?id=1"
+python3 advanced_scan.py "https://target.com/page?id=1"
 ```
 
-### Python API
+### python3 API
 
-```python
+```python3
 import asyncio
 from sqlprobe.engine import AssessmentEngine
 from sqlprobe.reporting import ReportGenerator
@@ -145,7 +145,7 @@ sqlprobe/
 ## Testing
 
 ```bash
-python -m sqlprobe -u "https://demo.testfire.net/search.jsp?query=test" -v --depth 1
+python3 -m sqlprobe -u "https://demo.testfire.net/search.jsp?query=test" -v --depth 1
 ```
 
 ## License
