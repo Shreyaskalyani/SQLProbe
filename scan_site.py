@@ -20,7 +20,7 @@ def display_banner() -> None:
 ║    ███████║╚██████╔╝███████╗██║     ██║  ██║╚██████╔╝██████╔╝███████╗   ║
 ║    ╚══════╝ ╚══▀▀═╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
 ║                                                                         ║
-║               Assessment Framework v2.0 (2026)                         ║
+║               Assessment Framework v1.0 (2026)                         ║
 ║               For Authorized Security Testing                           ║
 ║                                                                         ║
 ╚═════════════════════════════════════════════════════════════════════════╝
@@ -28,7 +28,7 @@ def display_banner() -> None:
         print(banner)
     except UnicodeEncodeError:
         print("=" * 70)
-        print("SQL INJECTION ASSESSMENT FRAMEWORK v2.0")
+        print("SQL INJECTION ASSESSMENT FRAMEWORK v1.0")
         print("For Authorized Security Testing Only")
         print("=" * 70)
 

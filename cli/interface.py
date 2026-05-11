@@ -17,7 +17,7 @@ def create_parser() -> argparse.ArgumentParser:
     
     parser = argparse.ArgumentParser(
         prog='sqlprobe',
-        description='SQL Injection Assessment Framework v2.0 (2026) - For authorized security testing only',
+        description='SQL Injection Assessment Framework v1.0 (2026) - For authorized security testing only',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Features:
@@ -207,7 +207,7 @@ def display_banner() -> None:
 ║    ███████║╚██████╔╝███████╗██║     ██║  ██║╚██████╔╝██████╔╝███████╗   ║
 ║    ╚══════╝ ╚══▀▀═╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝   ║
 ║                                                                         ║
-║               Assessment Framework v2.0 (2026)                          ║
+║               Assessment Framework v1.0 (2026)                          ║
 ║               For Authorized Security Testing                           ║
 ║                                                                         ║
 ╚═════════════════════════════════════════════════════════════════════════╝
@@ -215,7 +215,7 @@ def display_banner() -> None:
         print(banner)
     except UnicodeEncodeError:
         print("=" * 70)
-        print("SQL INJECTION ASSESSMENT FRAMEWORK v2.0 (2026)")
+        print("SQL INJECTION ASSESSMENT FRAMEWORK v1.0 (2026)")
         print("For Authorized Security Testing Only")
         print("=" * 70)
 
@@ -283,7 +283,7 @@ def run_cli() -> int:
         return 0
     
     if args.version:
-        print("SQL Injection Assessment Framework v2.0 (2026)")
+        print("SQL Injection Assessment Framework v1.0 (2026)")
         return 0
     
     display_banner()
