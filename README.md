@@ -25,15 +25,15 @@ A production-grade, modular framework for authorized security testing of SQL inj
 
 ## Features
 
-- **Async Engine**: High-performance async HTTP engine with connection pooling, retry logic, and rate limiting
-- **Smart Crawler**: Recursive crawling with form and parameter extraction
-- **Payload Engine**: 87+ payloads across 9 categories (Boolean, Error, Time-based, UNION, Blind, GraphQL, JSON, NoSQL)
-- **Detection Engine**: Multiple detection methods with confidence scoring
-- **WAF Detection**: Detects and adapts to 8+ WAF systems
-- **Auto-Parameter Discovery**: Forms, links, JS, common params
-- **Reporting**: JSON and HTML report generation
-- **Plugin System**: Extensible architecture for custom payloads and detection methods
-- **CLI**: Rich command-line interface with progress display
+- **Async Engine**: High-performance async HTTP engine with connection pooling, retry logic, and rate limiting.
+- **Smart Crawler**: Recursive crawling with form and parameter extraction.
+- **Payload Engine**: 87+ payloads across 9 categories (Boolean, Error, Time-based, UNION, Blind, GraphQL, JSON, NoSQL).
+- **Detection Engine**: Multiple detection methods with confidence scoring.
+- **WAF Detection**: Detects and adapts to 8+ WAF systems.
+- **Auto-Parameter Discovery**: Forms, links, JS, common params.
+- **Reporting**: JSON and HTML report generation.
+- **Plugin System**: Extensible architecture for custom payloads and detection methods.
+- **CLI**: Rich command-line interface with progress display.
 
 ## Installation
 
@@ -135,12 +135,12 @@ sqlprobe/
 
 ## Safety Controls
 
-- Domain whitelist enforcement
-- Rate limiting
-- Target confirmation required
-- Legal warning banner
-- No exploitation or data extraction
-- Detection-only (no data extraction)
+- Domain whitelist enforcement.
+- Rate limiting.
+- Target confirmation required.
+- Legal warning banner.
+- No exploitation or data extraction.
+- Detection-only (no data extraction).
 
 ## Testing
 
